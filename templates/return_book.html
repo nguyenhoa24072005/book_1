@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Return Book</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Return Book</h1>
+      <form method="POST" action="{{ url_for('return_book') }}">
+        <div class="form-group">
+          <label for="transaction_id">Select Transaction</label>
+          <select name="transaction_id" class="form-control" required>
+            {% for transaction in transactions %}
+            <option value="{{ transaction.id }}">
+              {{ transaction.member_name }} borrowed "{{ transaction.book_title
+              }}" on {{ transaction.borrow_date }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-danger">Return Book</button>
+      </form>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back</a>
+    </div>
+  </body>
+</html>

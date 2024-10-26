@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Management</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Library Management</h1>
+
+      <h2>Members</h2>
+      <ul class="list-group">
+        {% for member in members %}
+        <li class="list-group-item">
+          {{ member.name }} - {{ member.dob }} - {{ member.address }}
+        </li>
+        {% endfor %}
+      </ul>
+      <a href="{{ url_for('register_member') }}" class="btn btn-primary mt-3"
+        >Register New Member</a
+      >
+
+      <h2 class="mt-5">Books</h2>
+      <ul class="list-group">
+        {% for book in books %}
+        <li class="list-group-item">{{ book.title }} by {{ book.author }}</li>
+        {% endfor %}
+      </ul>
+      <a href="{{ url_for('add_book') }}" class="btn btn-primary mt-3"
+        >Add New Book</a
+      >
+
+      <h2 class="mt-5">Actions</h2>
+      <div class="btn-group-vertical">
+        <a href="{{ url_for('borrow_book_page') }}" class="btn btn-success mb-2"
+          >Borrow Book</a
+        >
+        <a href="{{ url_for('return_book_page') }}" class="btn btn-danger mb-2"
+          >Return Book</a
+        >
+        <a href="{{ url_for('members_report') }}" class="btn btn-info mb-2"
+          >View Members Report</a
+        >
+      </div>
+
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="alert alert-info mt-4">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+    </div>
+  </body>
+</html>

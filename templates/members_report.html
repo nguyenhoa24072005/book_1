@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Báo Cáo Thành Viên</title>
+  </head>
+  <body>
+    <h1>Báo Cáo Thành Viên Đang Mượn và Đã Trả Sách</h1>
+    <table border="1">
+      <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Ngày sinh</th>
+        <th>Địa chỉ</th>
+        <th>Tên sách</th>
+        <th>Ngày mượn</th>
+        <th>Ngày trả</th>
+        <th>Trạng thái</th>
+      </tr>
+      {% for member in members_report %}
+      <tr>
+        <td>{{ member.id }}</td>
+        <td>{{ member.name }}</td>
+        <td>{{ member.dob }}</td>
+        <td>{{ member.address }}</td>
+        <td>{{ member.title }}</td>
+        <td>{{ member.borrow_date }}</td>
+        <td>{{ member.return_date if member.return_date else 'Chưa trả' }}</td>
+        <td>{{ member.status }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <a href="{{ url_for('index') }}">Quay lại</a>
+  </body>
+</html>

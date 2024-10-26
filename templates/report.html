@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transaction Report</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Transaction Report</h1>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Member Name</th>
+            <th>Birthdate</th>
+            <th>Address</th>
+            <th>Book Title</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for transaction in transactions %}
+          <tr>
+            <td>{{ transaction.id }}</td>
+            <td>{{ transaction.member_name }}</td>
+            <td>{{ transaction.birthdate }}</td>
+            <td>{{ transaction.address }}</td>
+            <td>{{ transaction.book_title }}</td>
+            <td>{{ transaction.borrow_date }}</td>
+            <td>{{ transaction.return_date }}</td>
+            <td>{{ transaction.status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
