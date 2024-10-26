@@ -1,13 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
 from mysql.connector import Error
-from datetime import date
 import logging
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.secret_key = "supersecretkey"  # Ensure to change this for production
 
-# Kết nối đến cơ sở dữ liệu MySQL
+# Connect to the MySQL database
 def connect_db():
     try:
         connection = mysql.connector.connect(
@@ -21,12 +20,15 @@ def connect_db():
         logging.error(f"Error connecting to MySQL Platform: {e}")
         return None
 
-# Trang chủ, hiển thị danh sách thành viên và sách
+# Home page, display members and books
 @app.route('/')
 def index():
     conn = connect_db()
+    if conn is None:
+        flash("Error connecting to database.", "danger")
+        return render_template('index.html')
+
     cursor = conn.cursor(dictionary=True)
-    
     cursor.execute("SELECT * FROM members")
     members = cursor.fetchall()
     
@@ -38,7 +40,7 @@ def index():
     
     return render_template('index.html', members=members, books=books)
 
-# Đăng ký thành viên mới
+# Register a new member
 @app.route('/register_member', methods=['GET', 'POST'])
 def register_member():
     if request.method == 'POST':
@@ -47,6 +49,10 @@ def register_member():
         address = request.form['address']
         
         conn = connect_db()
+        if conn is None:
+            flash("Error connecting to database.", "danger")
+            return redirect(url_for('index'))
+
         cursor = conn.cursor()
         cursor.execute("INSERT INTO members (name, dob, address) VALUES (%s, %s, %s)", 
                        (name, birthdate, address))
@@ -59,7 +65,7 @@ def register_member():
     
     return render_template("register_member.html")
 
-# Thêm sách mới vào thư viện
+# Add a new book to the library
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
     if request.method == 'POST':
@@ -67,6 +73,10 @@ def add_book():
         author = request.form['author']
         
         conn = connect_db()
+        if conn is None:
+            flash("Error connecting to database.", "danger")
+            return redirect(url_for('index'))
+
         cursor = conn.cursor()
         cursor.execute("INSERT INTO books (title, author) VALUES (%s, %s)", 
                        (title, author))
@@ -79,10 +89,14 @@ def add_book():
     
     return render_template("add_book.html")
 
-# Trang mượn sách
+# Borrow book page
 @app.route('/borrow_book_page', methods=['GET'])
 def borrow_book_page():
     conn = connect_db()
+    if conn is None:
+        flash("Error connecting to database.", "danger")
+        return redirect(url_for('index'))
+
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("SELECT * FROM members")
@@ -96,10 +110,14 @@ def borrow_book_page():
     
     return render_template('borrow_book.html', members=members, available_books=available_books)
 
-# Trang trả sách
+# Return book page
 @app.route('/return_book_page', methods=['GET'])
 def return_book_page():
     conn = connect_db()
+    if conn is None:
+        flash("Error connecting to database.", "danger")
+        return redirect(url_for('index'))
+
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
@@ -116,11 +134,14 @@ def return_book_page():
 
     return render_template('return_book.html', transactions=transactions)
 
-
-# Xem báo cáo giao dịch
+# View transaction report
 @app.route('/report')
 def report():
     conn = connect_db()
+    if conn is None:
+        flash("Error connecting to database.", "danger")
+        return redirect(url_for('index'))
+
     cursor = conn.cursor(dictionary=True)
     
     cursor.execute("""  
@@ -138,11 +159,14 @@ def report():
     
     return render_template("report.html", transactions=transactions)
 
-
-# Xem báo cáo giao dịch của thành viên
+# View member transaction report
 @app.route('/members_report')
 def members_report():
     conn = connect_db()
+    if conn is None:
+        flash("Error connecting to database.", "danger")
+        return redirect(url_for('index'))
+
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("""
@@ -160,7 +184,6 @@ def members_report():
 
     return render_template("members_report.html", members_report=members_report)
 
-
-# Chạy ứng dụng Flask
+# Run the Flask application
 if __name__ == '__main__':
     app.run(debug=True)
